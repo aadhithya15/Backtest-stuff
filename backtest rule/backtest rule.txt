@@ -1,0 +1,27 @@
+No max-duration constant in the rules file — AquaFunded's 2-step standard plan has no time limit (only the minimum-days rule). I have everything needed now.
+2. Spread and slippage table
+All costs are read live from the broker feed, with these as the tested/measured baseline (in price units, not pips — multiply forex ones by 10,000 for pips):MarketSpread (round trip)In pips/pointsEURUSD0.000101.0 pipGBPUSD0.000141.4 pipsAUDUSD0.000131.3 pipsNZDUSD0.000181.8 pipsUSDCAD0.000161.6 pipsUSDCHF0.000151.5 pipsEURGBP0.000161.6 pipsUSDJPY0.0121.2 pipsEURJPY0.0181.8 pipsGBPJPY0.0313.1 pipsXAUUSD (gold)0.4343 centsNAS1001.921.92 points
+• Does cost change by timeframe? No — the spread itself is the same number regardless of timeframe. What changes is how much it hurts: on a 1-hour chart with a ~40-point stop, the NAS100 spread is under 4% of the risk; on a 1-minute chart with a ~4-point stop, that same spread eats ~38% of the risk. So the rule is: a trade is refused outright if the round-trip cost is more than 15% of what the trade is risking — not a different spread number, a pass/fail filter per trade.
+• Slippage: charged as 50% of the spread, added on top of the spread (so total round-trip cost = spread × 1.5).
+• Commission per lot: none charged separately — there's no standalone commission line. All cost is captured through the spread + slippage number above (this broker/setup is spread-only, not commission+spread).
+• One extra rule your team should build in: while testing is done on a demo account, every cost number is doubled (2x cushion) before deciding if a setup is tradable — real accounts often show friendlier spreads than they actually charge live, so the bot is deliberately pessimistic until it's connected to the real funded account, at which point the cushion switches off automatically.
+3. AquaFunded challenge rules — confirmed (2-Step Standard plan, the one we use)
+• Account size: $10,000 (adjust to whatever size your team is buying)
+• Step 1 profit target: 8%
+• Step 2 profit target: 5%
+• Daily loss limit: 5%
+• Maximum total drawdown: 8% (static, not trailing — doesn't move as you profit)
+• Consistency rule: none on this plan
+• Maximum challenge duration: no time limit — but there's a minimum: at least 3 qualifying trading days per step, and a day only counts if it made at least 0.5% profit that day. A day that just scratches around break-even doesn't count toward the 3, even if the account is otherwise up.
+• Other hard rules that apply in every stage (challenge and funded): any trade held under 2 minutes can have its profit removed (counted as tick scalping); no single position may use more than 80% of available margin; EAs are allowed, XAUUSD is allowed, no max lot limit, VPS is allowed.
+Other AquaFunded plans exist (1-step, 3-step, Instant, Aquaman) with different numbers, but the 2-Step Standard above is the one we're building for — happy to send those too if your team's account is a different plan.
+
+
+
+Yes — do exactly that. Don't guess or fill in missing numbers on any setup. Our bot works the same way: if a rule can't be pinned to something actually stated (an exact entry trigger, stop calc, exit rule, indicator period, session, direction), it doesn't get built — it gets marked "not enough information" and set aside. A made-up number is worse than no setup at all, because it would look tested when it never was.
+So for every setup you pull from the channel:
+1. Extract everything that IS clearly stated.
+2. For anything missing or unclear (including a video showing SMA 9 in one place and SMA 13 in another, or numbers only visible in a blurry screenshot) — list it separately as "missing: ___" for that setup. Don't pick one and move on.
+3. Send us both lists together: setups that are complete and backtest-ready, and setups that are incomplete with exactly what's missing from each.
+4. If you find any actual files — .set, .mq4, .mq5, Pine Script, or clean screenshots of the settings panel — send those over too, even for a setup that's otherwise incomplete. A real settings file beats anything typed from memory.
+Keep going through the whole channel this way. We'd rather get 10 fully-provable setups than 30 with guessed numbers — the incomplete ones aren't wasted either, we'll just hold them until the missing piece turns up.
